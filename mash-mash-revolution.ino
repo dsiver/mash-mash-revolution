@@ -13,24 +13,24 @@
 
 #define DEBUG 1
 #define SERIAL_BAUD_RATE 9600
+#define DELAY 250
+#define RADIUS 10
+
+int score;
 
 void setup() {
+  score = 0;
   Serial.begin(SERIAL_BAUD_RATE);
   EsploraTFT.begin();
   EsploraTFT.background(0, 0, 0);
   drawMashFloor();
-  
-  //Diagnostics
-  drawCircleOne();
-  drawCircleTwo();
-  drawCircleThree();
-  drawCircleFour();
-
-  //EsploraTFT.text(text, xPos, yPos);
   EsploraTFT.stroke(255, 255, 255);
   EsploraTFT.setTextSize(2);
+  //EsploraTFT.text(text, xPos, yPos);
   EsploraTFT.text("Score:", 0, 85);
   EsploraTFT.text("0", 0, 105);
+
+  demoCircles();
 }
 
 void loop() {
@@ -41,36 +41,75 @@ void loop() {
 void drawMashFloor() {
   //EsploraTFT.line(xStart, yStart, xEnd, yEnd);
   EsploraTFT.stroke(255, 255, 255);
-  EsploraTFT.line(40, 0, 0, 40);
-  EsploraTFT.line(0, 40, 40, 80);
-  EsploraTFT.line(40, 80, 80, 40);
-  EsploraTFT.line(80, 40, 40, 0);
-  EsploraTFT.line(20, 20, 60, 60);
-  EsploraTFT.line(20, 60, 60, 20);
+  EsploraTFT.line(80, 0, 40, 40);
+  EsploraTFT.line(40, 40, 80, 80);
+  EsploraTFT.line(80, 80, 120, 40);
+  EsploraTFT.line(120, 40, 80, 0);
+  EsploraTFT.line(60, 20, 100, 60);
+  EsploraTFT.line(60, 60, 100, 20);
 }
 
-void drawCircleOne(){
-  //EsploraTFT.circle(xPos, yPos, radius);
-  EsploraTFT.stroke(0,255,0);
-  EsploraTFT.fill(0,255,0);
-  EsploraTFT.circle(40, 60, 10);
+void drawCircleOne(boolean draw) {
+  if (draw) {
+    EsploraTFT.stroke(0, 255, 0);
+    EsploraTFT.fill(0, 255, 0);
+  }
+  else {
+    erase();
+  }
+  EsploraTFT.circle(80, 60, RADIUS);
 }
 
-void drawCircleTwo(){
-    EsploraTFT.stroke(255,0,0);
-  EsploraTFT.fill(255,0,0);
-  EsploraTFT.circle(20, 40, 10);
+void drawCircleTwo(boolean draw) {
+  if (draw) {
+    EsploraTFT.stroke(255, 0, 0);
+    EsploraTFT.fill(255, 0, 0);
+  }
+  else {
+    erase();
+  }
+  EsploraTFT.circle(60, 40, RADIUS);
 }
 
-void drawCircleThree(){
-  EsploraTFT.stroke(0,255,255);
-  EsploraTFT.fill(0, 255,255);
-  EsploraTFT.circle(40, 20, 10);
+void drawCircleThree(boolean draw) {
+  if (draw) {
+    EsploraTFT.stroke(0, 255, 255);
+    EsploraTFT.fill(0, 255, 255);
+  }
+  else {
+    erase();
+  }
+  EsploraTFT.circle(80, 20, RADIUS);
 }
 
-void drawCircleFour(){
-  EsploraTFT.stroke(0,0,255);
-  EsploraTFT.fill(0,0,255);
-  EsploraTFT.circle(60, 40, 10);
+void drawCircleFour(boolean draw) {
+  if (draw) {
+    EsploraTFT.stroke(0, 0, 255);
+    EsploraTFT.fill(0, 0, 255);
+  }
+  else {
+    erase();
+  }
+  EsploraTFT.circle(100, 40, RADIUS);
+}
+
+void erase() {
+  EsploraTFT.stroke(0, 0, 0);
+  EsploraTFT.fill(0, 0, 0);
+}
+
+void demoCircles() {
+  drawCircleOne(true);
+  delay(DELAY);
+  drawCircleOne(false);
+  drawCircleTwo(true);
+  delay(DELAY);
+  drawCircleTwo(false);
+  drawCircleThree(true);
+  delay(DELAY);
+  drawCircleThree(false);
+  drawCircleFour(true);
+  delay(DELAY);
+  drawCircleFour(false);
 }
 
