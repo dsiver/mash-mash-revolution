@@ -20,11 +20,17 @@ void setup() {
   EsploraTFT.background(0, 0, 0);
   drawMashFloor();
   
-  
+  //Diagnostics
   drawCircleOne();
   drawCircleTwo();
   drawCircleThree();
   drawCircleFour();
+
+  //EsploraTFT.text(text, xPos, yPos);
+  EsploraTFT.stroke(255, 255, 255);
+  EsploraTFT.setTextSize(2);
+  EsploraTFT.text("Score:", 0, 85);
+  EsploraTFT.text("0", 0, 105);
 }
 
 void loop() {
