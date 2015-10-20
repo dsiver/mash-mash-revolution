@@ -34,12 +34,10 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  
 }
 
 void drawMashFloor() {
-  //EsploraTFT.line(xStart, yStart, xEnd, yEnd);
   EsploraTFT.stroke(255, 255, 255);
   EsploraTFT.line(80, 0, 40, 40);
   EsploraTFT.line(40, 40, 80, 80);
