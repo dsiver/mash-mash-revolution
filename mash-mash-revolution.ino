@@ -22,30 +22,48 @@
 #define CIRCLE_THREE 3
 #define CIRCLE_FOUR 4
 
-int score, level;
+int score, level, circleNumber, oldCircleNumber;
 boolean circleOneDrawn, circleTwoDrawn, circleThreeDrawn, circleFourDrawn;
+const long circleOnDuration = 1000;
+const long circleOffDuration = 1250;
+unsigned long previousTime;
 
 void setup() {
+  randomSeed(Esplora.readMicrophone() + Esplora.readSlider() + Esplora.readTemperature(DEGREES_F) + Esplora.readLightSensor());
   score = 0;
   level = 1;
+  circleNumber = 0;
+  oldCircleNumber = circleNumber;
   circleOneDrawn = false;
   circleTwoDrawn = false;
   circleThreeDrawn = false;
   circleFourDrawn = false;
+  previousTime = 0;
   Serial.begin(SERIAL_BAUD_RATE);
   EsploraTFT.begin();
   EsploraTFT.background(0, 0, 0);
   drawMashFloor();
   drawScoreBoard();
+
   //demoCircles();
 }
 
 void loop() {
-
+  play();
 }
 
-int getRandomNumber(int low, int high) {
-  return random(low, high);
+void play() {
+  unsigned long now = millis();
+  //circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE);
+  circleNumber = 1;
+  if (circleOneDrawn && now - previousTime >= circleOnDuration) {
+    drawCircle(circleNumber, false);
+    previousTime = now;
+  }
+  else if (!circleOneDrawn && now - previousTime >= circleOffDuration) {
+    drawCircle(circleNumber, true);
+    previousTime = now;
+  }
 }
 
 /*
@@ -141,6 +159,10 @@ void drawCircleFour(boolean draw) {
 void erase() {
   EsploraTFT.stroke(0, 0, 0);
   EsploraTFT.fill(0, 0, 0);
+}
+
+int getRandomNumber(int low, int high) {
+  return random(low, high);
 }
 
 void demoCircles() {
