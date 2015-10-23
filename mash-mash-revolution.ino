@@ -48,19 +48,24 @@ int getRandomNumber(int low, int high) {
   return random(low, high);
 }
 
-void drawRandomCircle() {
-  int randomCircle = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE);
-  if (randomCircle == CIRCLE_ONE) {
-    drawCircleOne(true);
+/*
+ * Draws a specific circle on the TFT display.
+ * circleNumber:  Defined circle number from FIRST_CIRCLE to
+ *                LAST_CIRCLE
+ * draw:          Pass either 'true' to draw or 'false' to erase
+ */
+void drawCircle(int circleNumber, boolean draw) {
+  if (circleNumber == CIRCLE_ONE) {
+    drawCircleOne(draw);
   }
-  else if (randomCircle == CIRCLE_TWO) {
-    drawCircleTwo(true);
+  else if (circleNumber == CIRCLE_TWO) {
+    drawCircleTwo(draw);
   }
-  else if (randomCircle == CIRCLE_THREE) {
-    drawCircleThree(true);
+  else if (circleNumber == CIRCLE_THREE) {
+    drawCircleThree(draw);
   }
-  else if (randomCircle == CIRCLE_FOUR) {
-    drawCircleFour(true);
+  else if (circleNumber == CIRCLE_FOUR) {
+    drawCircleFour(draw);
   }
 }
 
