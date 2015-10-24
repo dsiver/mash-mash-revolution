@@ -21,9 +21,12 @@
 #define CIRCLE_TWO 2
 #define CIRCLE_THREE 3
 #define CIRCLE_FOUR 4
+#define SWITCH_ONE SWITCH_DOWN
+#define SWITCH_TWO SWITCH_LEFT
+#define SWITCH_THREE SWITCH_UP
+#define SWITCH_FOUR SWITCH_RIGHT
 
-int score, level, circleNumber, oldCircleNumber;
-boolean circleOneDrawn, circleTwoDrawn, circleThreeDrawn, circleFourDrawn;
+int score, level, buttonOne, oldButtonOne, circleNumber, oldCircleNumber, circles;
 const long circleOnDuration = 1000;
 const long circleOffDuration = 1250;
 unsigned long previousTime;
@@ -32,20 +35,17 @@ void setup() {
   randomSeed(Esplora.readMicrophone() + Esplora.readSlider() + Esplora.readTemperature(DEGREES_F) + Esplora.readLightSensor());
   score = 0;
   level = 1;
+  buttonOne = 0;
+  circles = 0;
+  oldButtonOne = buttonOne;
   circleNumber = 0;
   oldCircleNumber = circleNumber;
-  circleOneDrawn = false;
-  circleTwoDrawn = false;
-  circleThreeDrawn = false;
-  circleFourDrawn = false;
   previousTime = 0;
   Serial.begin(SERIAL_BAUD_RATE);
   EsploraTFT.begin();
   EsploraTFT.background(0, 0, 0);
   drawMashFloor();
   drawScoreBoard();
-
-  //demoCircles();
 }
 
 void loop() {
@@ -53,17 +53,35 @@ void loop() {
 }
 
 void play() {
-  unsigned long now = millis();
-  //circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE);
-  circleNumber = 1;
-  if (circleOneDrawn && now - previousTime >= circleOnDuration) {
-    drawCircle(circleNumber, false);
-    previousTime = now;
+  circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE);
+  if (circleNumber != oldCircleNumber) {
+    if (circles < level) {
+      drawCircle(circleNumber, true);
+      circles++;
+    }
   }
-  else if (!circleOneDrawn && now - previousTime >= circleOffDuration) {
-    drawCircle(circleNumber, true);
-    previousTime = now;
+  oldCircleNumber = circleNumber;
+  buttonOne = getButtonPress();
+  if (buttonOne != oldButtonOne && buttonOne > 0) {
+    Serial.println("buttonOne: " + String(buttonOne));
   }
+  oldButtonOne = buttonOne;
+}
+
+int getButtonPress() {
+  int switchStates[] = {Esplora.readButton(SWITCH_ONE), Esplora.readButton(SWITCH_TWO), Esplora.readButton(SWITCH_THREE), Esplora.readButton(SWITCH_FOUR)};
+  int sum = 0;
+  int pressedSwitch = 0;
+  for (int i = 0; i < 4; i++) {
+    sum += switchStates[i];
+    if (switchStates[i] == LOW) {
+      pressedSwitch = i + 1;
+    }
+  }
+  if (sum == 3) {
+    return pressedSwitch;
+  }
+  return -1;
 }
 
 /*
@@ -108,11 +126,9 @@ void drawCircleOne(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(0, 255, 0);
     EsploraTFT.fill(0, 255, 0);
-    circleOneDrawn = true;
   }
   else {
     erase();
-    circleOneDrawn = false;
   }
   EsploraTFT.circle(80, 60, RADIUS);
 }
@@ -121,11 +137,9 @@ void drawCircleTwo(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(255, 0, 0);
     EsploraTFT.fill(255, 0, 0);
-    circleTwoDrawn = true;
   }
   else {
     erase();
-    circleTwoDrawn = false;
   }
   EsploraTFT.circle(60, 40, RADIUS);
 }
@@ -134,11 +148,9 @@ void drawCircleThree(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(0, 255, 255);
     EsploraTFT.fill(0, 255, 255);
-    circleThreeDrawn = true;
   }
   else {
     erase();
-    circleThreeDrawn = false;
   }
   EsploraTFT.circle(80, 20, RADIUS);
 }
@@ -147,11 +159,9 @@ void drawCircleFour(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(0, 0, 255);
     EsploraTFT.fill(0, 0, 255);
-    circleFourDrawn = true;
   }
   else {
     erase();
-    circleFourDrawn = false;
   }
   EsploraTFT.circle(100, 40, RADIUS);
 }
