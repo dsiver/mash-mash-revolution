@@ -25,6 +25,7 @@
 #define SWITCH_TWO SWITCH_LEFT
 #define SWITCH_THREE SWITCH_UP
 #define SWITCH_FOUR SWITCH_RIGHT
+#define LEVEL_2_START 1000
 
 int score, oldScore, level, buttonOne, oldButtonOne, circleNumber, oldCircleNumber, circles;
 const long circleOnDuration = 1000;
@@ -52,6 +53,9 @@ void setup() {
 }
 
 void loop() {
+  if (score == LEVEL_2_START) {
+    level = 2;
+  }
   circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
   if (circles < level) {
     if (mashFloor[circleNumber - 1] == false) {
