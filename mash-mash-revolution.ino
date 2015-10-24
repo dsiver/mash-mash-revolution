@@ -58,12 +58,18 @@ void play() {
     if (circles < level) {
       drawCircle(circleNumber, true);
       circles++;
+      Serial.println("circles: " + String(circles));
     }
   }
   oldCircleNumber = circleNumber;
   buttonOne = getButtonPress();
   if (buttonOne != oldButtonOne && buttonOne > 0) {
-    Serial.println("buttonOne: " + String(buttonOne));
+    //Serial.println("buttonOne: " + String(buttonOne));
+    if (buttonOne == circleNumber) {
+      drawCircle(circleNumber, false);
+      circles--;
+      Serial.println("circles: " + String(circles));
+    }
   }
   oldButtonOne = buttonOne;
 }
@@ -126,9 +132,11 @@ void drawCircleOne(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(0, 255, 0);
     EsploraTFT.fill(0, 255, 0);
+    Serial.println("circle one drawn");
   }
   else {
     erase();
+    Serial.println("erased circle one");
   }
   EsploraTFT.circle(80, 60, RADIUS);
 }
@@ -137,9 +145,11 @@ void drawCircleTwo(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(255, 0, 0);
     EsploraTFT.fill(255, 0, 0);
+    Serial.println("circle two drawn");
   }
   else {
     erase();
+    Serial.println("erased circle two");
   }
   EsploraTFT.circle(60, 40, RADIUS);
 }
@@ -148,9 +158,11 @@ void drawCircleThree(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(0, 255, 255);
     EsploraTFT.fill(0, 255, 255);
+    Serial.println("circle three drawn");
   }
   else {
     erase();
+    Serial.println("erased circle three");
   }
   EsploraTFT.circle(80, 20, RADIUS);
 }
@@ -159,9 +171,11 @@ void drawCircleFour(boolean draw) {
   if (draw) {
     EsploraTFT.stroke(0, 0, 255);
     EsploraTFT.fill(0, 0, 255);
+    Serial.println("circle four drawn");
   }
   else {
     erase();
+    Serial.println("erased circle four");
   }
   EsploraTFT.circle(100, 40, RADIUS);
 }
