@@ -27,12 +27,15 @@
 #define SWITCH_FOUR SWITCH_RIGHT
 #define LEVEL_2_START 1000
 
-int score, oldScore, level, buttonOne, oldButtonOne, circleNumber, oldCircleNumber, circles;
+int score, oldScore, level;
+int buttonOne, oldButtonOne, buttonTwo, oldButtonTwo;
+int circleNumber, oldCircleNumber, circles;
 const long circleOnDuration = 1000;
 const long circleOffDuration = 1250;
 unsigned long previousTime;
 char scoreBoard[5];
 boolean mashFloor[4];
+boolean proceed = false;
 
 void setup() {
   randomSeed(Esplora.readMicrophone() + Esplora.readSlider() + Esplora.readTemperature(DEGREES_F) + Esplora.readLightSensor());
@@ -40,10 +43,12 @@ void setup() {
   oldScore = -1;
   level = 1;
   buttonOne = 0;
-  circles = 0;
+  buttonTwo = 0;
   oldButtonOne = buttonOne;
+  oldButtonTwo = buttonTwo;
   circleNumber = 0;
   oldCircleNumber = circleNumber;
+  circles = 0;
   previousTime = 0;
   Serial.begin(SERIAL_BAUD_RATE);
   EsploraTFT.begin();
@@ -65,20 +70,54 @@ void loop() {
       Serial.println("circles++: " + String(circles));
     }
   }
-  buttonOne = getButtonPress();
-  if (buttonOne != oldButtonOne && buttonOne > 0) {
-    Serial.println("buttonOne#: " + String(buttonOne));
-    if (mashFloor[buttonOne-1]) {
-      updateScoreBoard(50);
-      drawCircle(buttonOne, false);
-      circles--;
-      mashFloor[buttonOne-1] = false;
-      Serial.println("circles--: " + String(circles));
-    } else {
-      updateScoreBoard(-50);
-    }
+  readButtons();
+
+  // REMOVE DIAGNOSTIC BELOW
+  if (Esplora.readSlider() > 500) {
+    level = 2;
+  } else {
+    level = 1;
   }
-  oldButtonOne = buttonOne;
+  // REMOVE DIAGNOSTIC ABOVE
+}
+
+void readButtons() {
+  int switchOneState = Esplora.readButton(SWITCH_ONE);
+  int switchTwoState = Esplora.readButton(SWITCH_TWO);
+  int switchThreeState = Esplora.readButton(SWITCH_THREE);
+  int switchFourState = Esplora.readButton(SWITCH_FOUR);
+  int switchStateSum = switchOneState + switchTwoState + switchThreeState + switchFourState;
+  int switchStates[4] = {switchOneState, switchTwoState, switchThreeState, switchFourState};
+  if (switchStateSum == 4 - level) {
+    proceed = true;
+  }
+  else {
+    proceed = false;
+  }
+  if (proceed) {
+    boolean buttonOneFound = false;
+    int j = 3;
+    for (int i = 0; i < j; i++) {
+      for (j; j > i; j--) {
+        if (switchStates[i] == LOW) {
+          buttonOne = i + 1;
+          buttonOneFound = true;
+        }
+        if (switchStates[j] == LOW){
+          if (buttonOneFound){
+            buttonTwo = j + 1;
+          }
+          else {
+            buttonOne = j + 1;
+            buttonOneFound = true;
+          }
+        }
+      }
+    }
+    Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
+    oldButtonOne = buttonOne;
+    oldButtonTwo = buttonTwo;
+  }
 }
 
 int getButtonPress() {
