@@ -61,15 +61,7 @@ void loop() {
   if (score == LEVEL_2_START) {
     level = 2;
   }
-  circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
-  if (circles < level) {
-    if (mashFloor[circleNumber - 1] == false) {
-      drawCircle(circleNumber, true);
-      mashFloor[circleNumber - 1] = true;
-      circles++;
-      Serial.println("circles++: " + String(circles));
-    }
-  }
+  updateMashFloor();
   readButtons();
 
   // REMOVE DIAGNOSTIC BELOW
@@ -79,6 +71,18 @@ void loop() {
     level = 1;
   }
   // REMOVE DIAGNOSTIC ABOVE
+}
+
+void updateMashFloor() {
+  circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
+  if (circles < level) {
+    if (mashFloor[circleNumber - 1] == false) {
+      drawCircle(circleNumber, true);
+      mashFloor[circleNumber - 1] = true;
+      circles++;
+      Serial.println("circles++: " + String(circles));
+    }
+  }
 }
 
 void readButtons() {
@@ -95,29 +99,33 @@ void readButtons() {
     proceed = false;
   }
   if (proceed) {
-    boolean buttonOneFound = false;
-    int j = 3;
-    for (int i = 0; i < j; i++) {
-      for (j; j > i; j--) {
-        if (switchStates[i] == LOW) {
-          buttonOne = i + 1;
-          buttonOneFound = true;
+    setButtons(switchStates);
+  }
+}
+
+void setButtons(int switchStates[]) {
+  boolean buttonOneFound = false;
+  int j = 3;
+  for (int i = 0; i < j; i++) {
+    for (j; j > i; j--) {
+      if (switchStates[i] == LOW) {
+        buttonOne = i + 1;
+        buttonOneFound = true;
+      }
+      if (switchStates[j] == LOW) {
+        if (buttonOneFound) {
+          buttonTwo = j + 1;
         }
-        if (switchStates[j] == LOW){
-          if (buttonOneFound){
-            buttonTwo = j + 1;
-          }
-          else {
-            buttonOne = j + 1;
-            buttonOneFound = true;
-          }
+        else {
+          buttonOne = j + 1;
+          buttonOneFound = true;
         }
       }
     }
-    Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
-    oldButtonOne = buttonOne;
-    oldButtonTwo = buttonTwo;
   }
+  Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
+  oldButtonOne = buttonOne;
+  oldButtonTwo = buttonTwo;
 }
 
 int getButtonPress() {
