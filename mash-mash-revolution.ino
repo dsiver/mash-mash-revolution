@@ -25,20 +25,19 @@
 #define SWITCH_TWO SWITCH_LEFT
 #define SWITCH_THREE SWITCH_UP
 #define SWITCH_FOUR SWITCH_RIGHT
-#define LEVEL_2_START 1000
+#define LEVEL_2_START 500
 
 int score, oldScore, level;
 int buttonOne, oldButtonOne, buttonTwo, oldButtonTwo;
 int circleNumber, oldCircleNumber, circles;
 const long circleOnDuration = 1000;
-const long circleOffDuration = 1250;
 unsigned long previousTime;
 char scoreBoard[5];
 boolean mashFloor[4];
 boolean proceed = false;
 
 void setup() {
-  randomSeed(Esplora.readMicrophone() + Esplora.readSlider() + Esplora.readTemperature(DEGREES_F) + Esplora.readLightSensor());
+  randomSeed(Esplora.readMicrophone() + Esplora.readTemperature(DEGREES_F) + Esplora.readLightSensor());
   score = 0;
   oldScore = -1;
   level = 1;
