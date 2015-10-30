@@ -15,16 +15,18 @@
 #define SERIAL_BAUD_RATE 9600
 #define DELAY 250
 #define RADIUS 10
-#define FIRST_CIRCLE 1
-#define LAST_CIRCLE 4
 #define CIRCLE_ONE 1
 #define CIRCLE_TWO 2
 #define CIRCLE_THREE 3
 #define CIRCLE_FOUR 4
+#define FIRST_CIRCLE CIRCLE_ONE
+#define LAST_CIRCLE CIRCLE_FOUR
+#define NUM_CIRCLES LAST_CIRCLE
 #define SWITCH_ONE SWITCH_DOWN
 #define SWITCH_TWO SWITCH_LEFT
 #define SWITCH_THREE SWITCH_UP
 #define SWITCH_FOUR SWITCH_RIGHT
+#define NUM_SWITCHES 4
 #define LEVEL_2_START 500
 
 int score, oldScore, level;
@@ -33,7 +35,8 @@ int circleNumber, oldCircleNumber, circles;
 const long circleOnDuration = 1000;
 unsigned long previousTime;
 char scoreBoard[5];
-boolean mashFloor[4];
+boolean mashFloor[NUM_CIRCLES];
+boolean buttonsDown[NUM_SWITCHES];
 boolean proceed = false;
 
 void setup() {
@@ -62,6 +65,7 @@ void loop() {
   }
   updateMashFloor();
   readButtons();
+  //demoCircles();
 
   // REMOVE DIAGNOSTIC BELOW
   if (Esplora.readSlider() > 500) {
@@ -80,6 +84,17 @@ void updateMashFloor() {
       mashFloor[circleNumber - 1] = true;
       circles++;
       Serial.println("circles++: " + String(circles));
+
+      String diagnostic = "mashFloor = {";
+      for (int i = 0; i < NUM_CIRCLES; i++) {
+        if (i < NUM_CIRCLES - 1) {
+          diagnostic += String(mashFloor[i]) + ", ";
+        }
+        else {
+          diagnostic += String(mashFloor[i]) + "}";
+        }
+      }
+      Serial.println(diagnostic);
     }
   }
 }
@@ -90,8 +105,8 @@ void readButtons() {
   int switchThreeState = Esplora.readButton(SWITCH_THREE);
   int switchFourState = Esplora.readButton(SWITCH_FOUR);
   int switchStateSum = switchOneState + switchTwoState + switchThreeState + switchFourState;
-  int switchStates[4] = {switchOneState, switchTwoState, switchThreeState, switchFourState};
-  if (switchStateSum == 4 - level) {
+  int switchStates[NUM_SWITCHES] = {switchOneState, switchTwoState, switchThreeState, switchFourState};
+  if (switchStateSum == (HIGH * NUM_SWITCHES) - level) {
     proceed = true;
   }
   else {
@@ -104,7 +119,7 @@ void readButtons() {
 
 void setButtons(int switchStates[]) {
   boolean buttonOneFound = false;
-  int j = 3;
+  int j = NUM_SWITCHES - 1;
   for (int i = 0; i < j; i++) {
     for (j; j > i; j--) {
       if (switchStates[i] == LOW) {
@@ -125,6 +140,18 @@ void setButtons(int switchStates[]) {
   Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
   oldButtonOne = buttonOne;
   oldButtonTwo = buttonTwo;
+}
+
+boolean buttonsMatchCircles() {
+  if (level == 2){
+    
+  }
+  else if (level == 1) {
+    return mashFloor[buttonOne - 1] == true;
+  }
+  else {
+    return false;
+  }
 }
 
 int getButtonPress() {
