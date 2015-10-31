@@ -299,39 +299,3 @@ void erase() {
 int getRandomNumber(int low, int high) {
   return random(low, high);
 }
-
-void printDiagnostics() {
-  unsigned long now = millis();
-  if (now - previousSerialTime > serialTimer) {
-    previousSerialTime = now;
-    Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
-    String diagnostic = "mashFloor = {";
-    for (int i = 0; i < NUM_CIRCLES; i++) {
-      if (i < NUM_CIRCLES - 1) {
-        diagnostic += String(mashFloor[i]) + ", ";
-      }
-      else {
-        diagnostic += String(mashFloor[i]) + "}";
-      }
-    }
-    Serial.println(diagnostic);
-    Serial.println("buttonsMatchCircles(): " + String(buttonsMatchCircles()));
-    Serial.println("level: " + String(level));
-    Serial.println();
-  }
-}
-
-void demoCircles() {
-  drawCircleOne(true);
-  delay(DELAY);
-  drawCircleOne(false);
-  drawCircleTwo(true);
-  delay(DELAY);
-  drawCircleTwo(false);
-  drawCircleThree(true);
-  delay(DELAY);
-  drawCircleThree(false);
-  drawCircleFour(true);
-  delay(DELAY);
-  drawCircleFour(false);
-}
