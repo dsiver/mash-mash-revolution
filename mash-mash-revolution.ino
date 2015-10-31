@@ -158,27 +158,6 @@ boolean buttonsMatchCircles() {
   }
 }
 
-/*
- * Draws a specific circle on the TFT display.
- * circleNumber:  Defined circle number from FIRST_CIRCLE to
- *                LAST_CIRCLE
- * draw:          Pass either 'true' to draw or 'false' to erase
- */
-void drawCircle(int circleNumber, boolean draw) {
-  if (circleNumber == CIRCLE_ONE) {
-    drawCircleOne(draw);
-  }
-  else if (circleNumber == CIRCLE_TWO) {
-    drawCircleTwo(draw);
-  }
-  else if (circleNumber == CIRCLE_THREE) {
-    drawCircleThree(draw);
-  }
-  else if (circleNumber == CIRCLE_FOUR) {
-    drawCircleFour(draw);
-  }
-}
-
 /**
  * Draws the Mash Floor grid where circles will be drawn.
  */
@@ -232,6 +211,27 @@ void updateScoreBoard(int points) {
     EsploraTFT.text(scoreBoard, 0, 105);
   }
   oldScore = score;
+}
+
+/*
+ * Draws a specific circle on the TFT display.
+ * circleNumber:  Defined circle number from FIRST_CIRCLE to
+ *                LAST_CIRCLE
+ * draw:          Pass either 'true' to draw or 'false' to erase
+ */
+void drawCircle(int circleNumber, boolean draw) {
+  if (circleNumber == CIRCLE_ONE) {
+    drawCircleOne(draw);
+  }
+  else if (circleNumber == CIRCLE_TWO) {
+    drawCircleTwo(draw);
+  }
+  else if (circleNumber == CIRCLE_THREE) {
+    drawCircleThree(draw);
+  }
+  else if (circleNumber == CIRCLE_FOUR) {
+    drawCircleFour(draw);
+  }
 }
 
 void drawCircleOne(boolean draw) {
