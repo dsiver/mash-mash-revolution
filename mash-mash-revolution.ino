@@ -64,25 +64,34 @@ void setup() {
 }
 
 void loop() {
-  unsigned long now = millis();
   if (score >= LEVEL_2_START) {
     level = 2;
   }
+  unsigned long now = millis();
+  checkTimer(now);
   updateMashFloor();
   readButtons();
-  boolean match = buttonsMatchCircles();
-  if (match) {
-    updateScoreBoard(POINTS);
+  if (proceed) {
+    boolean match = buttonsMatchCircles();
+    if (match) {
+      previousTime = now;
+      updateScoreBoard(POINTS);
+    }
+    else {
+      updateScoreBoard(-POINTS);
+    }
     clearMashFloor();
-    previousTime = now;
   }
+  buttonOne = 0;
+  buttonTwo = 0;
+}
+
+void checkTimer(unsigned long now) {
   if (now - previousTime > circleInterval) {
     previousTime = now;
     updateScoreBoard(TIME_PENALTY);
     clearMashFloor();
   }
-  buttonOne = 0;
-  buttonTwo = 0;
 }
 
 void clearMashFloor() {
