@@ -72,25 +72,21 @@ void loop() {
   boolean match = buttonsMatchCircles();
   if (match) {
     updateScoreBoard(MATCH_VALUE);
-    drawCircle(buttonOne, false);
-    mashFloor[buttonOne - 1] = false;
+    clearMashFloor();
+  }
+  buttonOne = 0;
+  buttonTwo = 0;
+}
+
+void clearMashFloor() {
+  drawCircle(buttonOne, false);
+  mashFloor[buttonOne - 1] = false;
+  circles--;
+  if (level == 2) {
+    drawCircle(buttonTwo, false);
+    mashFloor[buttonTwo - 1] = false;
     circles--;
-    if (level == 2) {
-      drawCircle(buttonTwo, false);
-      mashFloor[buttonTwo - 1] = false;
-      circles--;
-    }
   }
-
-  // REMOVE DIAGNOSTIC BELOW
-  printDiagnostics();
-
-  if (Esplora.readSlider() > 500) {
-    level = 2;
-  } else {
-    level = 1;
-  }
-  // REMOVE DIAGNOSTIC ABOVE
 }
 
 void updateMashFloor() {
@@ -145,7 +141,6 @@ void setButtons(int switchStates[]) {
       }
     }
   }
-  //Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
   oldButtonOne = buttonOne;
   oldButtonTwo = buttonTwo;
 }
@@ -162,22 +157,6 @@ boolean buttonsMatchCircles() {
   else {
     return false;
   }
-}
-
-int getButtonPress() {
-  int switchStates[] = {Esplora.readButton(SWITCH_ONE), Esplora.readButton(SWITCH_TWO), Esplora.readButton(SWITCH_THREE), Esplora.readButton(SWITCH_FOUR)};
-  int sum = 0;
-  int pressedSwitch = 0;
-  for (int i = 0; i < 4; i++) {
-    sum += switchStates[i];
-    if (switchStates[i] == LOW) {
-      pressedSwitch = i + 1;
-    }
-  }
-  if (sum == 3) {
-    return pressedSwitch;
-  }
-  return -1;
 }
 
 /*
@@ -201,6 +180,9 @@ void drawCircle(int circleNumber, boolean draw) {
   }
 }
 
+/**
+ * Draws the Mash Floor grid where circles will be drawn.
+ */
 void drawMashFloor() {
   for (int i = 0; i < LAST_CIRCLE; i++) {
     mashFloor[i] = false;
