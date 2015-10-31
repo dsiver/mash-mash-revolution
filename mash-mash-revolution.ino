@@ -28,12 +28,15 @@
 #define SWITCH_FOUR SWITCH_RIGHT
 #define NUM_SWITCHES 4
 #define LEVEL_2_START 500
+#define MATCH_VALUE 50
 
 int score, oldScore, level;
 int buttonOne, oldButtonOne, buttonTwo, oldButtonTwo;
 int circleNumber, oldCircleNumber, circles;
+const long serialTimer = 5000;
 const long circleOnDuration = 1000;
 unsigned long previousTime;
+unsigned long previousSerialTime;
 char scoreBoard[5];
 boolean mashFloor[NUM_CIRCLES];
 boolean buttonsDown[NUM_SWITCHES];
@@ -60,14 +63,28 @@ void setup() {
 }
 
 void loop() {
+  
   if (score == LEVEL_2_START) {
     level = 2;
   }
   updateMashFloor();
   readButtons();
-  //demoCircles();
+  boolean match = buttonsMatchCircles();
+  if (match) {
+    updateScoreBoard(MATCH_VALUE);
+    drawCircle(buttonOne, false);
+    mashFloor[buttonOne - 1] = false;
+    circles--;
+    if(level == 2) {
+      drawCircle(buttonTwo, false);
+      mashFloor[buttonTwo - 1] = false;
+      circles--;
+    }
+  }
 
   // REMOVE DIAGNOSTIC BELOW
+  printDiagnostics();
+  
   if (Esplora.readSlider() > 500) {
     level = 2;
   } else {
@@ -84,17 +101,6 @@ void updateMashFloor() {
       mashFloor[circleNumber - 1] = true;
       circles++;
       Serial.println("circles++: " + String(circles));
-
-      String diagnostic = "mashFloor = {";
-      for (int i = 0; i < NUM_CIRCLES; i++) {
-        if (i < NUM_CIRCLES - 1) {
-          diagnostic += String(mashFloor[i]) + ", ";
-        }
-        else {
-          diagnostic += String(mashFloor[i]) + "}";
-        }
-      }
-      Serial.println(diagnostic);
     }
   }
 }
@@ -137,17 +143,19 @@ void setButtons(int switchStates[]) {
       }
     }
   }
-  Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
+  //Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
   oldButtonOne = buttonOne;
   oldButtonTwo = buttonTwo;
 }
 
 boolean buttonsMatchCircles() {
-  if (level == 2){
-    
+  boolean buttonOneMatches = mashFloor[buttonOne - 1] == true;
+  boolean buttonTwoMatches = mashFloor[buttonTwo - 1] == true;
+  if (level == 2) {
+    return buttonOneMatches && buttonTwoMatches;
   }
   else if (level == 1) {
-    return mashFloor[buttonOne - 1] == true;
+    return buttonOneMatches;
   }
   else {
     return false;
@@ -281,6 +289,26 @@ void erase() {
 
 int getRandomNumber(int low, int high) {
   return random(low, high);
+}
+
+void printDiagnostics() {
+  unsigned long now = millis();
+  if (now - previousSerialTime > serialTimer) {
+    previousSerialTime = now;
+    Serial.println("buttonOne: " + String(buttonOne) + " buttonTwo: " + String(buttonTwo));
+    String diagnostic = "mashFloor = {";
+    for (int i = 0; i < NUM_CIRCLES; i++) {
+      if (i < NUM_CIRCLES - 1) {
+        diagnostic += String(mashFloor[i]) + ", ";
+      }
+      else {
+        diagnostic += String(mashFloor[i]) + "}";
+      }
+    }
+    Serial.println(diagnostic);
+    Serial.println("buttonsMatchCircles(): " + String(buttonsMatchCircles()));
+    Serial.println();
+  }
 }
 
 void demoCircles() {
