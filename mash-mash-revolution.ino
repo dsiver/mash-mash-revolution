@@ -34,6 +34,8 @@
 int score, oldScore, level;
 int buttonOne, buttonTwo;
 int circleNumber, oldCircleNumber, circles;
+const int switches[NUM_SWITCHES] = {SWITCH_ONE, SWITCH_TWO, SWITCH_THREE, SWITCH_FOUR};
+int switchStates[NUM_SWITCHES], previousSwitchStates[NUM_SWITCHES];
 const long circleInterval = 1000;
 const long debounceDelay = 300;
 unsigned long previousTime;
@@ -43,16 +45,8 @@ boolean mashFloor[NUM_CIRCLES];
 boolean proceed = false;
 
 void setup() {
+  initializeVariables();
   randomSeed(Esplora.readMicrophone() + Esplora.readTemperature(DEGREES_F) + Esplora.readLightSensor());
-  score = 0;
-  oldScore = -1;
-  level = 1;
-  buttonOne = 0;
-  buttonTwo = 0;
-  circleNumber = 0;
-  oldCircleNumber = circleNumber;
-  circles = 0;
-  previousTime = 0;
   Serial.begin(SERIAL_BAUD_RATE);
   EsploraTFT.begin();
   EsploraTFT.background(0, 0, 0);
@@ -84,12 +78,18 @@ void loop() {
 }
 
 void readButtons() {
-  int switchOneState = Esplora.readButton(SWITCH_ONE);
-  int switchTwoState = Esplora.readButton(SWITCH_TWO);
-  int switchThreeState = Esplora.readButton(SWITCH_THREE);
-  int switchFourState = Esplora.readButton(SWITCH_FOUR);
-  int switchStateSum = switchOneState + switchTwoState + switchThreeState + switchFourState;
-  int switchStates[NUM_SWITCHES] = {switchOneState, switchTwoState, switchThreeState, switchFourState};
+//  int switchOneState = Esplora.readButton(SWITCH_ONE);
+//  int switchTwoState = Esplora.readButton(SWITCH_TWO);
+//  int switchThreeState = Esplora.readButton(SWITCH_THREE);
+//  int switchFourState = Esplora.readButton(SWITCH_FOUR);
+//  int switchStateSum = switchOneState + switchTwoState + switchThreeState + switchFourState;
+//  int switchStates[NUM_SWITCHES] = {switchOneState, switchTwoState, switchThreeState, switchFourState};
+  int switchStateSum = 0;
+  for (int i = 0; i < NUM_SWITCHES; i++){
+    int state = Esplora.readButton(switches[i]);
+    switchStateSum += state;
+    switchStates[i] = state;
+  }
   if (switchStateSum == (HIGH * NUM_SWITCHES) - level) {
     proceed = true;
   }
@@ -286,3 +286,20 @@ void checkTimer(unsigned long now) {
     clearMashFloor();
   }
 }
+
+void initializeVariables(){
+  score = 0;
+  oldScore = -1;
+  level = 1;
+  buttonOne = 0;
+  buttonTwo = 0;
+  circleNumber = 0;
+  oldCircleNumber = circleNumber;
+  circles = 0;
+  previousTime = 0;
+  for (int i = 0; i < NUM_SWITCHES; i++){
+    switchStates[i] = HIGH;
+    previousSwitchStates[i] = HIGH;
+  }
+}
+
