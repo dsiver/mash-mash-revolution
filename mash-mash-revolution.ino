@@ -104,19 +104,6 @@ void clearMashFloor() {
   }
 }
 
-void updateMashFloor() {
-  for (int i = 1; i <= level; i++) {
-    circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
-    if (circles < level) {
-      if (mashFloor[circleNumber - 1] == false) {
-        drawCircle(circleNumber, true);
-        mashFloor[circleNumber - 1] = true;
-        circles++;
-      }
-    }
-  }
-}
-
 void readButtons() {
   int switchOneState = Esplora.readButton(SWITCH_ONE);
   int switchTwoState = Esplora.readButton(SWITCH_TWO);
@@ -206,6 +193,19 @@ void drawMashFloor() {
   EsploraTFT.line(120, 40, 80, 0);
   EsploraTFT.line(60, 20, 100, 60);
   EsploraTFT.line(60, 60, 100, 20);
+}
+
+void updateMashFloor() {
+  for (int i = 1; i <= level; i++) {
+    circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
+    if (circles < level) {
+      if (mashFloor[circleNumber - 1] == false) {
+        drawCircle(circleNumber, true);
+        mashFloor[circleNumber - 1] = true;
+        circles++;
+      }
+    }
+  }
 }
 
 void drawScoreBoard() {
