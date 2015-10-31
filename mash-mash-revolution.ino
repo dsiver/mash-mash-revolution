@@ -32,12 +32,10 @@
 #define TIME_PENALTY -25
 
 int score, oldScore, level;
-int buttonOne, buttonTwo;
+int buttonOne, buttonOneState, oldButtonOneState, buttonTwo, buttonTwoState, oldButtonTwoState;
 int circleNumber, oldCircleNumber, circles;
 const long circleInterval = 1000;
-const long debounceDelay = 300;
 unsigned long previousTime;
-unsigned long previousDebounceTime;
 char scoreBoard[5];
 boolean mashFloor[NUM_CIRCLES];
 boolean proceed = false;
@@ -67,10 +65,21 @@ void loop() {
   unsigned long now = millis();
   checkTimer(now);
   updateMashFloor();
-  if (now - previousDebounceTime > debounceDelay) {
-    readButtons();
+  readButtons();
+  if (level > 1) {
+    if (buttonOneState == LOW && buttonTwoState == LOW){
+      proceed = buttonOneState != oldButtonOneState && buttonTwoState != oldButtonTwoState;
+    }    
+  } else {
+    if (buttonOneState == LOW) {
+      proceed = buttonOneState != oldButtonOneState;
+    }    
   }
   if (proceed) {
+    Serial.println("b1s: " + constantToString(buttonOneState, "pin") + " ob1s: " + constantToString(oldButtonOneState, "pin"));
+    if (level > 1) {
+      Serial.println("b2s: " + constantToString(buttonTwoState, "pin") + " ob2s: " + constantToString(oldButtonTwoState, "pin"));
+    }
     boolean match = buttonsMatchCircles();
     if (match) {
       previousTime = now;
@@ -81,6 +90,8 @@ void loop() {
     }
     clearMashFloor();
   }
+  oldButtonOneState = buttonOneState;
+  oldButtonTwoState = buttonTwoState;
 }
 
 void readButtons() {
@@ -92,9 +103,10 @@ void readButtons() {
   int switchStates[NUM_SWITCHES] = {switchOneState, switchTwoState, switchThreeState, switchFourState};
   if (switchStateSum == (HIGH * NUM_SWITCHES) - level) {
     proceed = true;
-  }
-  else {
+  } else {
     proceed = false;
+    buttonOneState = HIGH;
+    buttonTwoState = HIGH;
   }
   if (proceed) {
     setButtons(switchStates);
@@ -103,6 +115,7 @@ void readButtons() {
 
 void setButtons(int switchStates[]) {
   boolean buttonOneFound = false;
+  boolean buttonTwoFound = false;
   int j = NUM_SWITCHES - 1;
   for (int i = 0; i < j; i++) {
     for (j; j > i; j--) {
@@ -113,12 +126,40 @@ void setButtons(int switchStates[]) {
       if (switchStates[j] == LOW) {
         if (buttonOneFound) {
           buttonTwo = j + 1;
+          buttonTwoFound = true;
         }
         else {
           buttonOne = j + 1;
           buttonOneFound = true;
         }
       }
+    }
+  }
+  if (buttonOneFound) {
+    buttonOneState = LOW;
+  }
+  if (buttonTwoFound) {
+    buttonTwoState = LOW;
+  }
+  //  Serial.println("b1found: " + constantToString(buttonOneFound, "boolean") + " b1s: " + constantToString(buttonOneState, "pin"));
+  //  if (level > 1) {
+  //    Serial.println("b2found: " + constantToString(buttonTwoFound, "boolean") + " b2s: " + constantToString(buttonTwoState, "pin"));
+  //  }
+}
+
+String constantToString(int constant, String type) {
+  if (type == "boolean") {
+    if (constant == true) {
+      return "true";
+    } else {
+      return "false";
+    }
+  }
+  else if (type == "pin") {
+    if (constant == LOW) {
+      return "LOW";
+    } else {
+      return "HIGH";
     }
   }
 }
