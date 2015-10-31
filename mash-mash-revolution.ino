@@ -67,10 +67,6 @@ void loop() {
   updateMashFloor();
   readButtons();
   if (isCorrectNumButtonsDown()) {
-    Serial.println("b1s: " + constantToString(buttonOneState, "pin") + " ob1s: " + constantToString(oldButtonOneState, "pin"));
-    if (level > 1) {
-      Serial.println("b2s: " + constantToString(buttonTwoState, "pin") + " ob2s: " + constantToString(oldButtonTwoState, "pin"));
-    }
     boolean match = buttonsMatchCircles();
     if (match) {
       previousTime = now;
@@ -147,10 +143,6 @@ void setButtons(int switchStates[]) {
   if (buttonTwoFound) {
     buttonTwoState = LOW;
   }
-  //  Serial.println("b1found: " + constantToString(buttonOneFound, "boolean") + " b1s: " + constantToString(buttonOneState, "pin"));
-  //  if (level > 1) {
-  //    Serial.println("b2found: " + constantToString(buttonTwoFound, "boolean") + " b2s: " + constantToString(buttonTwoState, "pin"));
-  //  }
 }
 
 String constantToString(int constant, String type) {
