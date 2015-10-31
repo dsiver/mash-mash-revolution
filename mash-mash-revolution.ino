@@ -28,13 +28,14 @@
 #define SWITCH_FOUR SWITCH_RIGHT
 #define NUM_SWITCHES 4
 #define LEVEL_2_START 500
-#define MATCH_VALUE 50
+#define POINTS 50
+#define TIME_PENALTY -25
 
 int score, oldScore, level;
 int buttonOne, oldButtonOne, buttonTwo, oldButtonTwo;
 int circleNumber, oldCircleNumber, circles;
 const long serialTimer = 5000;
-const long circleOnDuration = 1000;
+const long circleInterval = 1000;
 unsigned long previousTime;
 unsigned long previousSerialTime;
 char scoreBoard[5];
@@ -71,8 +72,13 @@ void loop() {
   readButtons();
   boolean match = buttonsMatchCircles();
   if (match) {
-    updateScoreBoard(MATCH_VALUE);
+    updateScoreBoard(POINTS);
     clearMashFloor();
+    previousTime = now;
+  }
+  if (now - previousTime > circleInterval){
+    previousTime = now;
+    updateScoreBoard(TIME_PENALTY);
   }
   buttonOne = 0;
   buttonTwo = 0;
