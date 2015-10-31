@@ -37,11 +37,9 @@ int circleNumber, oldCircleNumber, circles;
 const long circleInterval = 1000;
 const long debounceDelay = 300;
 unsigned long previousTime;
-unsigned long previousSerialTime;
 unsigned long previousDebounceTime;
 char scoreBoard[5];
 boolean mashFloor[NUM_CIRCLES];
-boolean buttonsDown[NUM_SWITCHES];
 boolean proceed = false;
 
 void setup() {
