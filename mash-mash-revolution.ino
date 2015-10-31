@@ -66,16 +66,7 @@ void loop() {
   checkTimer(now);
   updateMashFloor();
   readButtons();
-  if (level > 1) {
-    if (buttonOneState == LOW && buttonTwoState == LOW){
-      proceed = buttonOneState != oldButtonOneState && buttonTwoState != oldButtonTwoState;
-    }    
-  } else {
-    if (buttonOneState == LOW) {
-      proceed = buttonOneState != oldButtonOneState;
-    }    
-  }
-  if (proceed) {
+  if (isCorrectNumButtonsDown()) {
     Serial.println("b1s: " + constantToString(buttonOneState, "pin") + " ob1s: " + constantToString(oldButtonOneState, "pin"));
     if (level > 1) {
       Serial.println("b2s: " + constantToString(buttonTwoState, "pin") + " ob2s: " + constantToString(oldButtonTwoState, "pin"));
@@ -92,6 +83,21 @@ void loop() {
   }
   oldButtonOneState = buttonOneState;
   oldButtonTwoState = buttonTwoState;
+}
+
+boolean isCorrectNumButtonsDown() {
+  boolean result = false;
+  if (level > 1) {
+    if (buttonOneState == LOW && buttonTwoState == LOW) {
+      result = buttonOneState != oldButtonOneState && buttonTwoState != oldButtonTwoState;
+    }
+  }
+  else if (level == 1) {
+    if (buttonOneState == LOW) {
+      result = buttonOneState != oldButtonOneState;
+    }
+  }
+  return result;
 }
 
 void readButtons() {
