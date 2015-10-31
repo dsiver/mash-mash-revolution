@@ -91,19 +91,6 @@ void checkTimer(unsigned long now) {
   }
 }
 
-void clearMashFloor() {
-  int circleIndex = 0;
-  for (int i = 1; i <= NUM_CIRCLES; i++) {
-    drawCircle(i, false);
-    mashFloor[circleIndex] = false;
-    circleIndex++;
-    circles--;
-    if (circles < 0) {
-      circles = 0;
-    }
-  }
-}
-
 void readButtons() {
   int switchOneState = Esplora.readButton(SWITCH_ONE);
   int switchTwoState = Esplora.readButton(SWITCH_TWO);
@@ -183,6 +170,19 @@ void updateMashFloor() {
         mashFloor[circleNumber - 1] = true;
         circles++;
       }
+    }
+  }
+}
+
+void clearMashFloor() {
+  int circleIndex = 0;
+  for (int i = 1; i <= NUM_CIRCLES; i++) {
+    drawCircle(i, false);
+    mashFloor[circleIndex] = false;
+    circleIndex++;
+    circles--;
+    if (circles < 0) {
+      circles = 0;
     }
   }
 }
