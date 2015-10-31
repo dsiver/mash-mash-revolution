@@ -76,7 +76,7 @@ void loop() {
     clearMashFloor();
     previousTime = now;
   }
-  if (now - previousTime > circleInterval){
+  if (now - previousTime > circleInterval) {
     previousTime = now;
     updateScoreBoard(TIME_PENALTY);
     clearMashFloor();
@@ -87,12 +87,12 @@ void loop() {
 
 void clearMashFloor() {
   int circleIndex = 0;
-  for (int i = 1; i <= NUM_CIRCLES; i++){
+  for (int i = 1; i <= NUM_CIRCLES; i++) {
     drawCircle(i, false);
     mashFloor[circleIndex] = false;
     circleIndex++;
     circles--;
-    if (circles < 0){
+    if (circles < 0) {
       circles = 0;
     }
   }
@@ -106,7 +106,6 @@ void updateMashFloor() {
         drawCircle(circleNumber, true);
         mashFloor[circleNumber - 1] = true;
         circles++;
-        Serial.println("circles++: " + String(circles));
       }
     }
   }
