@@ -72,9 +72,9 @@ void loop() {
   unsigned long now = millis();
   checkTimer(now);
   updateMashFloor();
-  if ( now - previousDebounceTime > debounceDelay){
+  if (now - previousDebounceTime > debounceDelay) {
     readButtons();
-  }  
+  }
   if (proceed) {
     boolean match = buttonsMatchCircles();
     if (match) {
@@ -226,7 +226,11 @@ void drawScoreBoard() {
 }
 
 void updateScoreBoard(int points) {
-  score += points;
+  if (points < 0) {
+    score += (level * points);
+  } else {
+    score += points;
+  }
   if (score < 0) {
     score = 0;
   }
