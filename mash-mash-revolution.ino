@@ -97,11 +97,11 @@ void readButtons() {
     proceed = false;
   }
   if (proceed) {
-    setButtons(switchStates);
+    setButtons();
   }
 }
 
-void setButtons(int switchStates[]) {
+void setButtons() {
   boolean buttonOneFound = false;
   int j = NUM_SWITCHES - 1;
   for (int i = 0; i < j; i++) {
