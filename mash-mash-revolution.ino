@@ -79,19 +79,22 @@ void loop() {
   if (now - previousTime > circleInterval){
     previousTime = now;
     updateScoreBoard(TIME_PENALTY);
+    clearMashFloor();
   }
   buttonOne = 0;
   buttonTwo = 0;
 }
 
 void clearMashFloor() {
-  drawCircle(buttonOne, false);
-  mashFloor[buttonOne - 1] = false;
-  circles--;
-  if (level == 2) {
-    drawCircle(buttonTwo, false);
-    mashFloor[buttonTwo - 1] = false;
+  int circleIndex = 0;
+  for (int i = 1; i <= NUM_CIRCLES; i++){
+    drawCircle(i, false);
+    mashFloor[circleIndex] = false;
+    circleIndex++;
     circles--;
+    if (circles < 0){
+      circles = 0;
+    }
   }
 }
 
