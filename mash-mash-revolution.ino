@@ -36,8 +36,10 @@ int buttonOne, oldButtonOne, buttonTwo, oldButtonTwo;
 int circleNumber, oldCircleNumber, circles;
 const long serialTimer = 5000;
 const long circleInterval = 1000;
+const long debounceDelay = 50;
 unsigned long previousTime;
 unsigned long previousSerialTime;
+unsigned long previousDebounceTime;
 char scoreBoard[5];
 boolean mashFloor[NUM_CIRCLES];
 boolean buttonsDown[NUM_SWITCHES];
@@ -70,7 +72,9 @@ void loop() {
   unsigned long now = millis();
   checkTimer(now);
   updateMashFloor();
-  readButtons();
+  if ( now - previousDebounceTime > debounceDelay){
+    readButtons();
+  }  
   if (proceed) {
     boolean match = buttonsMatchCircles();
     if (match) {
