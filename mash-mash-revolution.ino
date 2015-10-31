@@ -83,14 +83,6 @@ void loop() {
   }
 }
 
-void checkTimer(unsigned long now) {
-  if (now - previousTime > circleInterval) {
-    previousTime = now;
-    updateScoreBoard(TIME_PENALTY);
-    clearMashFloor();
-  }
-}
-
 void readButtons() {
   int switchOneState = Esplora.readButton(SWITCH_ONE);
   int switchTwoState = Esplora.readButton(SWITCH_TWO);
@@ -285,4 +277,12 @@ void erase() {
 
 int getRandomNumber(int low, int high) {
   return random(low, high);
+}
+
+void checkTimer(unsigned long now) {
+  if (now - previousTime > circleInterval) {
+    previousTime = now;
+    updateScoreBoard(TIME_PENALTY);
+    clearMashFloor();
+  }
 }
