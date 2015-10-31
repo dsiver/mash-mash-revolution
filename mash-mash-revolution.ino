@@ -206,6 +206,7 @@ void updateMashFloor() {
     if (circles < level) {
       if (mashFloor[circleNumber - 1] == false) {
         drawCircle(circleNumber, true);
+        previousTime = millis();
         mashFloor[circleNumber - 1] = true;
         circles++;
       }
