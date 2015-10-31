@@ -63,8 +63,8 @@ void setup() {
 }
 
 void loop() {
-  
-  if (score == LEVEL_2_START) {
+  unsigned long now = millis();
+  if (score >= LEVEL_2_START) {
     level = 2;
   }
   updateMashFloor();
@@ -75,7 +75,7 @@ void loop() {
     drawCircle(buttonOne, false);
     mashFloor[buttonOne - 1] = false;
     circles--;
-    if(level == 2) {
+    if (level == 2) {
       drawCircle(buttonTwo, false);
       mashFloor[buttonTwo - 1] = false;
       circles--;
@@ -84,7 +84,7 @@ void loop() {
 
   // REMOVE DIAGNOSTIC BELOW
   printDiagnostics();
-  
+
   if (Esplora.readSlider() > 500) {
     level = 2;
   } else {
@@ -94,13 +94,15 @@ void loop() {
 }
 
 void updateMashFloor() {
-  circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
-  if (circles < level) {
-    if (mashFloor[circleNumber - 1] == false) {
-      drawCircle(circleNumber, true);
-      mashFloor[circleNumber - 1] = true;
-      circles++;
-      Serial.println("circles++: " + String(circles));
+  for (int i = 1; i <= level; i++) {
+    circleNumber = getRandomNumber(FIRST_CIRCLE, LAST_CIRCLE + 1);
+    if (circles < level) {
+      if (mashFloor[circleNumber - 1] == false) {
+        drawCircle(circleNumber, true);
+        mashFloor[circleNumber - 1] = true;
+        circles++;
+        Serial.println("circles++: " + String(circles));
+      }
     }
   }
 }
@@ -307,6 +309,7 @@ void printDiagnostics() {
     }
     Serial.println(diagnostic);
     Serial.println("buttonsMatchCircles(): " + String(buttonsMatchCircles()));
+    Serial.println("level: " + String(level));
     Serial.println();
   }
 }
