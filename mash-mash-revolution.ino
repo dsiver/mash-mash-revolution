@@ -145,23 +145,6 @@ void setButtons(int switchStates[]) {
   }
 }
 
-String constantToString(int constant, String type) {
-  if (type == "boolean") {
-    if (constant == true) {
-      return "true";
-    } else {
-      return "false";
-    }
-  }
-  else if (type == "pin") {
-    if (constant == LOW) {
-      return "LOW";
-    } else {
-      return "HIGH";
-    }
-  }
-}
-
 boolean buttonsMatchCircles() {
   boolean buttonOneMatches = mashFloor[buttonOne - 1] == true;
   boolean buttonTwoMatches = mashFloor[buttonTwo - 1] == true;
