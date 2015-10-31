@@ -32,11 +32,10 @@
 #define TIME_PENALTY -25
 
 int score, oldScore, level;
-int buttonOne, oldButtonOne, buttonTwo, oldButtonTwo;
+int buttonOne, buttonTwo;
 int circleNumber, oldCircleNumber, circles;
-const long serialTimer = 5000;
 const long circleInterval = 1000;
-const long debounceDelay = 50;
+const long debounceDelay = 300;
 unsigned long previousTime;
 unsigned long previousSerialTime;
 unsigned long previousDebounceTime;
@@ -52,8 +51,6 @@ void setup() {
   level = 1;
   buttonOne = 0;
   buttonTwo = 0;
-  oldButtonOne = buttonOne;
-  oldButtonTwo = buttonTwo;
   circleNumber = 0;
   oldCircleNumber = circleNumber;
   circles = 0;
@@ -86,8 +83,6 @@ void loop() {
     }
     clearMashFloor();
   }
-  buttonOne = 0;
-  buttonTwo = 0;
 }
 
 void checkTimer(unsigned long now) {
@@ -162,8 +157,6 @@ void setButtons(int switchStates[]) {
       }
     }
   }
-  oldButtonOne = buttonOne;
-  oldButtonTwo = buttonTwo;
 }
 
 boolean buttonsMatchCircles() {
@@ -226,11 +219,7 @@ void drawScoreBoard() {
 }
 
 void updateScoreBoard(int points) {
-  if (points < 0) {
-    score += (level * points);
-  } else {
-    score += points;
-  }
+  score += points;
   if (score < 0) {
     score = 0;
   }
