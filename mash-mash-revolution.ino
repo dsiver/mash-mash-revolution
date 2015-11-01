@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <TFT.h>
 #include <Esplora.h>
+#include "Circle.h"
 
 #define DEBUG 1
 #define SERIAL_BAUD_RATE 9600
@@ -235,67 +236,24 @@ void updateScoreBoard(int points) {
  * draw:          Pass either 'true' to draw or 'false' to erase
  */
 void drawCircle(int circleNumber, boolean draw) {
+  Circle circle;
   if (circleNumber == CIRCLE_ONE) {
-    drawCircleOne(draw);
+    circle.initialize(80, 60, RADIUS, Circle::GREEN);
   }
   else if (circleNumber == CIRCLE_TWO) {
-    drawCircleTwo(draw);
+    circle.initialize(60, 40, RADIUS, Circle::BLUE);
   }
   else if (circleNumber == CIRCLE_THREE) {
-    drawCircleThree(draw);
+    circle.initialize(80, 20, RADIUS, Circle::YELLOW);
   }
   else if (circleNumber == CIRCLE_FOUR) {
-    drawCircleFour(draw);
+    circle.initialize(100, 40, RADIUS, Circle::RED);
   }
-}
-
-void drawCircleOne(boolean draw) {
   if (draw) {
-    EsploraTFT.stroke(0, 255, 0);
-    EsploraTFT.fill(0, 255, 0);
+    circle.draw();
+  } else {
+    circle.erase();
   }
-  else {
-    erase();
-  }
-  EsploraTFT.circle(80, 60, RADIUS);
-}
-
-void drawCircleTwo(boolean draw) {
-  if (draw) {
-    EsploraTFT.stroke(255, 0, 0);
-    EsploraTFT.fill(255, 0, 0);
-  }
-  else {
-    erase();
-  }
-  EsploraTFT.circle(60, 40, RADIUS);
-}
-
-void drawCircleThree(boolean draw) {
-  if (draw) {
-    EsploraTFT.stroke(0, 255, 255);
-    EsploraTFT.fill(0, 255, 255);
-  }
-  else {
-    erase();
-  }
-  EsploraTFT.circle(80, 20, RADIUS);
-}
-
-void drawCircleFour(boolean draw) {
-  if (draw) {
-    EsploraTFT.stroke(0, 0, 255);
-    EsploraTFT.fill(0, 0, 255);
-  }
-  else {
-    erase();
-  }
-  EsploraTFT.circle(100, 40, RADIUS);
-}
-
-void erase() {
-  EsploraTFT.stroke(0, 0, 0);
-  EsploraTFT.fill(0, 0, 0);
 }
 
 int getRandomNumber(int low, int high) {
