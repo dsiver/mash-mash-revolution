@@ -1,3 +1,13 @@
+/*
+ * Circle.h
+ * Header for Circle class for Mash Mash Revolution
+ * Board: Arduino Esplora
+ * 
+ * David Siver
+ * CS 4985
+ * Fall 2015
+ */
+
 #ifndef Circle_H
 #define Circle_H
 

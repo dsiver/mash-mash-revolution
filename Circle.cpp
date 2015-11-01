@@ -1,3 +1,13 @@
+/*
+ * Circle.cpp
+ * Circle class for Mash Mash Revolution
+ * Board: Arduino Esplora
+ * 
+ * David Siver
+ * CS 4985
+ * Fall 2015
+ */
+
 #include "Circle.h"
 
 #define GREEN_RGB 0, 255, 0

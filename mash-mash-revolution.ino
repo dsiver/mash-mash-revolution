@@ -160,7 +160,7 @@ boolean buttonsMatchCircles() {
   }
 }
 
-/**
+/*
  * Draws the Mash Floor grid where circles will be drawn.
  */
 void drawMashFloor() {
